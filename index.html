@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculatrice</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="calculatrice">
+
+  <h1>Ma Calculatrice</h1>
+
+  <input id="number1" type="number" placeholder="Premier nombre">
+
+  <input id="number2" type="number" placeholder="Deuxième nombre">
+
+  <button onclick="additionner()">
+  Addition
+</button>
+
+<button onclick="soustraire()">
+  Soustraction
+</button>
+
+<button onclick="multiplier()">
+  Multiplication
+</button>
+
+<button onclick="diviser()">
+  Division
+</button>
+
+<button onclick="effacerChamps()">
+    Effacer
+</button>
+
+  <p id="resultat">
+    Résultat :
+  </p>
+
+  <h2>Historique</h2>
+  <ul id="historique"></ul>
+  </div>
+  <script src="script.js"></script>
+
+</body>
+</html>
