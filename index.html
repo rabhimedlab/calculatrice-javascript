@@ -1,45 +1,76 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculatrice</title>
 
-  <link rel="stylesheet" href="style.css">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Calculatrice</title>
+
+    <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
+
     <div class="calculatrice">
-      <button onclick="changerTheme()">
-    🌙 Mode sombre
-</button>
 
-  <h1>Amane Calculatrice</h1>
+        <button onclick="changerTheme()">
+            🌙 Mode sombre
+        </button>
 
-  <input id="number1" type="number" placeholder="Premier nombre">
+        <h1>Amane Calculatrice</h1>
 
-  <input id="number2" type="number" placeholder="Deuxième nombre">
+        <input
+            id="number1"
+            type="number"
+            placeholder="Premier nombre"
+        >
 
-  <button id="btn-add" onclick="additionner()">+</button>
+        <input
+            id="number2"
+            type="number"
+            placeholder="Deuxième nombre"
+        >
 
-<button id="btn-sub" onclick="soustraire()">-</button>
+        <p id="operation-active">
+            Opération : aucune
+        </p>
 
-<button id="btn-mul" onclick="multiplier()">×</button>
+        <button id="btn-add" onclick="additionner()">
+            +
+        </button>
 
-<button id="btn-div" onclick="diviser()">÷</button>
+        <button id="btn-sub" onclick="soustraire()">
+            -
+        </button>
 
-<button onclick="effacerChamps()">
-    Effacer
-</button>
+        <button id="btn-mul" onclick="multiplier()">
+            ×
+        </button>
 
-  <p id="resultat">
-    Résultat :
-  </p>
+        <button id="btn-div" onclick="diviser()">
+            ÷
+        </button>
 
-  <h2>Historique</h2>
-  <ul id="historique"></ul>
-  </div>
-  <script src="script.js"></script>
+        <button onclick="effacerChamps()">
+            Effacer
+        </button>
+
+        <p id="resultat">
+            Résultat :
+        </p>
+
+        <h2>Historique</h2>
+
+        <ul id="historique"></ul>
+
+    </div>
+
+    <script src="script.js"></script>
 
 </body>
+
 </html>
