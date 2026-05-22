@@ -160,3 +160,9 @@ document.addEventListener("keydown", function(event) {
     }
 
 });
+
+function changerTheme() {
+
+    document.body.classList.toggle("dark-mode");
+
+}
