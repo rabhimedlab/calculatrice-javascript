@@ -122,15 +122,17 @@ function effacerChamps() {
     document.getElementById("resultat").textContent = "Résultat :";
 
     document.getElementById("historique").innerHTML = "";
+    
+    localStorage.removeItem("historiqueCalculatrice");
 }
 
 
 function ajouterHistorique(texte) {
-
     const historique = document.getElementById("historique");
 
     historique.innerHTML += "<li>" + texte + "</li>";
 
+    localStorage.setItem("historiqueCalculatrice", historique.innerHTML);
 }
 
 document.addEventListener("keydown", function(event) {
@@ -166,3 +168,11 @@ function changerTheme() {
     document.body.classList.toggle("dark-mode");
 
 }
+
+window.addEventListener("load", function () {
+    const historiqueSauvegarde = localStorage.getItem("historiqueCalculatrice");
+
+    if (historiqueSauvegarde) {
+        document.getElementById("historique").innerHTML = historiqueSauvegarde;
+    }
+});
