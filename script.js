@@ -26,6 +26,8 @@ const number2 = Number(valeur2);
 
 function additionner() {
 
+    operation = "+";
+
     const nombres = recupererNombres();
 
 if (!nombres) {
@@ -44,6 +46,8 @@ const { number1, number2 } = nombres;
 
 
 function soustraire() {
+
+    operation = "-";
 
     const nombres = recupererNombres();
 
@@ -64,6 +68,8 @@ const { number1, number2 } = nombres;
 
 function multiplier() {
 
+    operation = "*";
+
     const nombres = recupererNombres();
 
 if (!nombres) {
@@ -82,6 +88,8 @@ const { number1, number2 } = nombres;
 
 
 function diviser() {
+
+    operation = "/";
 
     const nombres = recupererNombres();
 
@@ -135,11 +143,35 @@ function ajouterHistorique(texte) {
     localStorage.setItem("historiqueCalculatrice", historique.innerHTML);
 }
 
+let operation = "";
 
 document.addEventListener("keydown", function(event) {
 
+    if (event.key === "+") {
+        event.preventDefault();
+        operation = "+";
+    }
+
+    if (event.key === "-") {
+        event.preventDefault();
+        operation = "-";
+    }
+
+    if (event.key === "*") {
+        event.preventDefault();
+        operation = "*";
+    }
+
+    if (event.key === "/") {
+        event.preventDefault();
+        operation = "/";
+    }
+
     if (event.key === "Enter") {
-        additionner();
+        if (operation === "+") additionner();
+        if (operation === "-") soustraire();
+        if (operation === "*") multiplier();
+        if (operation === "/") diviser();
     }
 
     if (event.key === "Escape") {
