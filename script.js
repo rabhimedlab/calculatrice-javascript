@@ -122,7 +122,7 @@ function effacerChamps() {
     document.getElementById("resultat").textContent = "Résultat :";
 
     document.getElementById("historique").innerHTML = "";
-    
+
     localStorage.removeItem("historiqueCalculatrice");
 }
 
@@ -135,21 +135,6 @@ function ajouterHistorique(texte) {
     localStorage.setItem("historiqueCalculatrice", historique.innerHTML);
 }
 
-document.addEventListener("keydown", function(event) {
-
-    if (event.key === "Enter") {
-
-        additionner();
-
-    }
-
-    if (event.key === "Escape") {
-
-        effacerChamps();
-
-    }
-
-});
 
 document.addEventListener("keydown", function(event) {
 
