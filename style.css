@@ -82,3 +82,23 @@ button {
 button:active {
     transform: scale(0.96);
 }
+
+#btn-add:hover {
+    background-color: #16a34a;
+    transform: scale(1.05);
+}
+
+#btn-sub:hover {
+    background-color: #dc2626;
+    transform: scale(1.05);
+}
+
+#btn-mul:hover {
+    background-color: #ea580c;
+    transform: scale(1.05);
+}
+
+#btn-div:hover {
+    background-color: #7c3aed;
+    transform: scale(1.05);
+}
