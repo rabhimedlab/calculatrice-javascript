@@ -5,13 +5,31 @@
 }
 
 body {
-    background: #1e1e1e;
+    background: linear-gradient(
+        -45deg,
+        #0f2027,
+        #203a43,
+        #2c5364,
+        #1c1c1c
+    );
+
+    background-size: 400% 400%;
+
+    animation: gradientMove 12s ease infinite;
+
     font-family: Arial, sans-serif;
+
     display: flex;
+
     justify-content: center;
+
     align-items: center;
+
     min-height: 100vh;
+
     color: white;
+
+    overflow: hidden;
 }
 
 .phone-calculator {
@@ -115,4 +133,93 @@ h2 {
 
 #display {
     overflow-x: auto;
+}
+
+.btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::after {
+    content: "";
+    position: absolute;
+    width: 120%;
+    height: 120%;
+    background: rgba(255,255,255,0.15);
+    top: -110%;
+    left: -110%;
+    border-radius: 50%;
+    transition: 0.4s;
+}
+
+.btn:active::after {
+    top: 0;
+    left: 0;
+}
+
+.btn:active {
+    transform: scale(0.92);
+}
+
+#display {
+    transition: 0.2s;
+}
+
+@keyframes gradientMove {
+
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.phone-calculator {
+
+    background: rgba(255,255,255,0.08);
+
+    border: 1px solid rgba(255,255,255,0.15);
+
+    backdrop-filter: blur(25px);
+
+    -webkit-backdrop-filter: blur(25px);
+
+    box-shadow:
+        0 8px 32px rgba(0,0,0,0.4);
+
+    transition: 0.4s;
+}
+
+.phone-calculator:hover {
+
+    transform: translateY(-5px);
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,0.5);
+}
+
+
+.result-animation {
+    animation: resultPop 0.25s ease;
+}
+
+@keyframes resultPop {
+
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.06);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }

@@ -9,12 +9,8 @@ const historique = document.getElementById("historique");
 function updateDisplay() {
 
     if (previousValue !== "" && operation !== "") {
-
-        display.textContent =
-            previousValue + " " + operation + " " + currentValue;
-
+        display.textContent = previousValue + " " + operation + " " + currentValue;
     } else {
-
         display.textContent = currentValue || "0";
     }
 }
@@ -26,7 +22,6 @@ function appendNumber(number) {
     }
 
     currentValue += number;
-
     updateDisplay();
 }
 
@@ -37,37 +32,17 @@ function chooseOperation(op) {
     }
 
     previousValue = currentValue;
-
     currentValue = "";
-
     operation = op;
 
-    if (op === "+") {
-        operationActive.textContent = "Opération : Addition";
-    }
-
-    if (op === "-") {
-        operationActive.textContent = "Opération : Soustraction";
-    }
-
-    if (op === "*") {
-        operationActive.textContent = "Opération : Multiplication";
-    }
-
-    if (op === "/") {
-        operationActive.textContent = "Opération : Division";
-    }
+    operationActive.textContent = op;
 
     updateDisplay();
 }
 
 function calculate() {
 
-    if (
-        previousValue === "" ||
-        currentValue === "" ||
-        operation === ""
-    ) {
+    if (previousValue === "" || currentValue === "" || operation === "") {
         return;
     }
 
@@ -91,9 +66,7 @@ function calculate() {
     if (operation === "/") {
 
         if (number2 === 0) {
-
             display.textContent = "Erreur";
-
             return;
         }
 
@@ -101,48 +74,41 @@ function calculate() {
     }
 
     const calculComplet =
-        previousValue +
-        " " +
-        operation +
-        " " +
-        currentValue +
-        " = " +
-        result;
+        previousValue + " " + operation + " " + currentValue + " = " + result;
 
     ajouterHistorique(calculComplet);
 
     display.textContent = calculComplet;
 
+    display.classList.add("result-animation");
+
+    setTimeout(function() {
+        display.classList.remove("result-animation");
+    }, 250);
+
     currentValue = String(result);
-
     previousValue = "";
-
     operation = "";
 
-    operationActive.textContent = "Opération : aucune";
+    operationActive.textContent = "";
 }
 
 function clearDisplay() {
 
     currentValue = "";
-
     previousValue = "";
-
     operation = "";
 
     display.textContent = "0";
-
-    operationActive.textContent = "Opération : aucune";
+    operationActive.textContent = "";
 
     historique.innerHTML = "";
-
     localStorage.removeItem("historiqueCalculatrice");
 }
 
 function deleteLast() {
 
     currentValue = currentValue.slice(0, -1);
-
     updateDisplay();
 }
 
@@ -179,9 +145,7 @@ document.addEventListener("keydown", function(event) {
     }
 
     if (event.key === "/") {
-
         event.preventDefault();
-
         chooseOperation("/");
     }
 
@@ -204,7 +168,6 @@ window.addEventListener("load", function() {
         localStorage.getItem("historiqueCalculatrice");
 
     if (historiqueSauvegarde) {
-
         historique.innerHTML = historiqueSauvegarde;
     }
 

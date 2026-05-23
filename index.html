@@ -1,21 +1,26 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculatrice Smartphone</title>
+    <title>Amane Calculator</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
     <div class="phone-calculator">
 
+        <h1>∑</h1>
+
         <div class="screen">
-            <div id="operation-active">Opération : aucune</div>
+            <div id="operation-active"></div>
             <div id="display">0</div>
         </div>
 
         <div class="buttons">
+
             <button onclick="clearDisplay()" class="btn special">C</button>
             <button onclick="deleteLast()" class="btn special">⌫</button>
             <button onclick="chooseOperation('/')" class="btn operator">÷</button>
@@ -38,6 +43,7 @@
 
             <button onclick="appendNumber('0')" class="btn zero">0</button>
             <button onclick="appendNumber('.')" class="btn">.</button>
+
         </div>
 
         <h2>Historique</h2>
@@ -48,4 +54,5 @@
     <script src="script.js"></script>
 
 </body>
+
 </html>
