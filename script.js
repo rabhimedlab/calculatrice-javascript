@@ -1,227 +1,202 @@
-function recupererNombres() {
+let currentValue = "";
+let previousValue = "";
+let operation = "";
 
-    const valeur1 = document.getElementById("number1").value;
-    const valeur2 = document.getElementById("number2").value;
+const display = document.getElementById("display");
+const operationActive = document.getElementById("operation-active");
+const historique = document.getElementById("historique");
 
-    if (valeur1 === "" || valeur2 === "") {
+function updateDisplay() {
 
-        afficherResultat("Veuillez remplir les deux champs");
-        return null;
+    if (previousValue !== "" && operation !== "") {
+
+        display.textContent =
+            previousValue + " " + operation + " " + currentValue;
+
+    } else {
+
+        display.textContent = currentValue || "0";
     }
-
-    const number1 = Number(valeur1);
-    const number2 = Number(valeur2);
-
-    return { number1, number2 };
 }
 
+function appendNumber(number) {
 
-function afficherOperation(texte) {
-    document.getElementById("operation-active").textContent = texte;
-}
-
-
-function additionner() {
-
-    operation = "+";
-    afficherOperation("Opération : Addition");
-
-    const nombres = recupererNombres();
-
-    if (!nombres) {
+    if (number === "." && currentValue.includes(".")) {
         return;
     }
 
-    const { number1, number2 } = nombres;
+    currentValue += number;
 
-    const resultat = number1 + number2;
-
-    afficherResultat(resultat);
-
-    ajouterHistorique(number1 + " + " + number2 + " = " + resultat);
+    updateDisplay();
 }
 
+function chooseOperation(op) {
 
-function soustraire() {
-
-    operation = "-";
-    afficherOperation("Opération : Soustraction");
-
-    const nombres = recupererNombres();
-
-    if (!nombres) {
+    if (currentValue === "") {
         return;
     }
 
-    const { number1, number2 } = nombres;
+    previousValue = currentValue;
 
-    const resultat = number1 - number2;
+    currentValue = "";
 
-    afficherResultat(resultat);
+    operation = op;
 
-    ajouterHistorique(number1 + " - " + number2 + " = " + resultat);
+    if (op === "+") {
+        operationActive.textContent = "Opération : Addition";
+    }
+
+    if (op === "-") {
+        operationActive.textContent = "Opération : Soustraction";
+    }
+
+    if (op === "*") {
+        operationActive.textContent = "Opération : Multiplication";
+    }
+
+    if (op === "/") {
+        operationActive.textContent = "Opération : Division";
+    }
+
+    updateDisplay();
 }
 
+function calculate() {
 
-function multiplier() {
-
-    operation = "*";
-    afficherOperation("Opération : Multiplication");
-
-    const nombres = recupererNombres();
-
-    if (!nombres) {
+    if (
+        previousValue === "" ||
+        currentValue === "" ||
+        operation === ""
+    ) {
         return;
     }
 
-    const { number1, number2 } = nombres;
+    const number1 = Number(previousValue);
+    const number2 = Number(currentValue);
 
-    const resultat = number1 * number2;
+    let result;
 
-    afficherResultat(resultat);
-
-    ajouterHistorique(number1 + " × " + number2 + " = " + resultat);
-}
-
-
-function diviser() {
-
-    operation = "/";
-    afficherOperation("Opération : Division");
-
-    const nombres = recupererNombres();
-
-    if (!nombres) {
-        return;
+    if (operation === "+") {
+        result = number1 + number2;
     }
 
-    const { number1, number2 } = nombres;
-
-    if (number2 === 0) {
-
-        afficherResultat("Impossible de diviser par zéro");
-        return;
+    if (operation === "-") {
+        result = number1 - number2;
     }
 
-    const resultat = number1 / number2;
+    if (operation === "*") {
+        result = number1 * number2;
+    }
 
-    afficherResultat(resultat);
+    if (operation === "/") {
 
-    ajouterHistorique(number1 + " ÷ " + number2 + " = " + resultat);
-}
+        if (number2 === 0) {
 
+            display.textContent = "Erreur";
 
-function afficherResultat(resultat) {
+            return;
+        }
 
-    document.getElementById("resultat").textContent =
-        "Résultat : " + resultat;
-}
+        result = number1 / number2;
+    }
 
+    const calculComplet =
+        previousValue +
+        " " +
+        operation +
+        " " +
+        currentValue +
+        " = " +
+        result;
 
-function effacerChamps() {
+    ajouterHistorique(calculComplet);
 
-    document.getElementById("number1").value = "";
-    document.getElementById("number2").value = "";
+    display.textContent = calculComplet;
 
-    document.getElementById("resultat").textContent = "Résultat :";
+    currentValue = String(result);
 
-    document.getElementById("historique").innerHTML = "";
-
-    afficherOperation("Opération : aucune");
+    previousValue = "";
 
     operation = "";
+
+    operationActive.textContent = "Opération : aucune";
+}
+
+function clearDisplay() {
+
+    currentValue = "";
+
+    previousValue = "";
+
+    operation = "";
+
+    display.textContent = "0";
+
+    operationActive.textContent = "Opération : aucune";
+
+    historique.innerHTML = "";
 
     localStorage.removeItem("historiqueCalculatrice");
 }
 
+function deleteLast() {
+
+    currentValue = currentValue.slice(0, -1);
+
+    updateDisplay();
+}
 
 function ajouterHistorique(texte) {
 
-    const historique = document.getElementById("historique");
-
     historique.innerHTML += "<li>" + texte + "</li>";
 
-    localStorage.setItem("historiqueCalculatrice", historique.innerHTML);
+    localStorage.setItem(
+        "historiqueCalculatrice",
+        historique.innerHTML
+    );
 }
-
-
-let operation = "";
-
 
 document.addEventListener("keydown", function(event) {
 
-    if (event.key === "+") {
-
-        event.preventDefault();
-
-        operation = "+";
-
-        afficherOperation("Opération : Addition");
+    if (event.key >= "0" && event.key <= "9") {
+        appendNumber(event.key);
     }
 
+    if (event.key === ".") {
+        appendNumber(".");
+    }
+
+    if (event.key === "+") {
+        chooseOperation("+");
+    }
 
     if (event.key === "-") {
-
-        event.preventDefault();
-
-        operation = "-";
-
-        afficherOperation("Opération : Soustraction");
+        chooseOperation("-");
     }
-
 
     if (event.key === "*") {
-
-        event.preventDefault();
-
-        operation = "*";
-
-        afficherOperation("Opération : Multiplication");
+        chooseOperation("*");
     }
-
 
     if (event.key === "/") {
 
         event.preventDefault();
 
-        operation = "/";
-
-        afficherOperation("Opération : Division");
+        chooseOperation("/");
     }
-
 
     if (event.key === "Enter") {
-
-        if (operation === "+") {
-            additionner();
-        }
-
-        if (operation === "-") {
-            soustraire();
-        }
-
-        if (operation === "*") {
-            multiplier();
-        }
-
-        if (operation === "/") {
-            diviser();
-        }
+        calculate();
     }
 
+    if (event.key === "Backspace") {
+        deleteLast();
+    }
 
     if (event.key === "Escape") {
-
-        effacerChamps();
+        clearDisplay();
     }
 });
-
-
-function changerTheme() {
-
-    document.body.classList.toggle("dark-mode");
-}
-
 
 window.addEventListener("load", function() {
 
@@ -230,7 +205,8 @@ window.addEventListener("load", function() {
 
     if (historiqueSauvegarde) {
 
-        document.getElementById("historique").innerHTML =
-            historiqueSauvegarde;
+        historique.innerHTML = historiqueSauvegarde;
     }
+
+    updateDisplay();
 });
