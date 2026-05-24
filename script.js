@@ -149,7 +149,7 @@ document.addEventListener("keydown", function(event) {
         chooseOperation("/");
     }
 
-    if (event.key === "Enter") {
+    if (event.key === "=" || event.key === "Enter") {
         calculate();
     }
 
