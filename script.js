@@ -213,3 +213,18 @@ window.addEventListener("load", function() {
 function toggleTheme() {
     document.body.classList.toggle("light-mode");
 }
+
+if ("serviceWorker" in navigator) {
+
+    window.addEventListener("load", function() {
+
+        navigator.serviceWorker
+            .register("./service-worker.js")
+
+            .then(function() {
+                console.log("Service Worker enregistré");
+            });
+
+    });
+
+}
