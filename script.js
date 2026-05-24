@@ -16,11 +16,19 @@ const angleModeButton =
 function playClickSound() {
     clickSound.currentTime = 0;
     clickSound.play();
+
+    if (navigator.vibrate) {
+        navigator.vibrate(20);
+    }
 }
 
 function playEqualSound() {
     equalSound.currentTime = 0;
     equalSound.play();
+
+    if (navigator.vibrate) {
+        navigator.vibrate(40);
+    }
 }
 
 function sauvegarderCalculatrice() {
@@ -412,4 +420,13 @@ if ("serviceWorker" in navigator) {
                 console.log("Service Worker enregistré");
             });
     });
+}
+
+function clearHistory() {
+
+    playClickSound();
+
+    historique.innerHTML = "";
+
+    localStorage.removeItem("historiqueCalculatrice");
 }
