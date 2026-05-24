@@ -1,4 +1,4 @@
-const CACHE_NAME = "amane-calculator-v1";
+const CACHE_NAME = "amane-calculator-v2";
 
 const urlsToCache = [
     "./",
@@ -12,29 +12,51 @@ const urlsToCache = [
     "./sounds/equal.mp3"
 ];
 
-self.addEventListener("install", function(event) {
+self.addEventListener("install", event => {
+
+    self.skipWaiting();
 
     event.waitUntil(
 
-        caches.open(CACHE_NAME).then(function(cache) {
+        caches.open(CACHE_NAME)
+            .then(cache => {
+                return cache.addAll(urlsToCache);
+            })
 
-            return cache.addAll(urlsToCache);
+    );
+});
+
+self.addEventListener("activate", event => {
+
+    event.waitUntil(
+
+        caches.keys().then(cacheNames => {
+
+            return Promise.all(
+
+                cacheNames.map(cache => {
+
+                    if (cache !== CACHE_NAME) {
+                        return caches.delete(cache);
+                    }
+
+                })
+
+            );
 
         })
 
     );
 
+    self.clients.claim();
 });
 
-self.addEventListener("fetch", function(event) {
+self.addEventListener("fetch", event => {
 
     event.respondWith(
 
-        caches.match(event.request).then(function(response) {
-
-            return response || fetch(event.request);
-
-        })
+        fetch(event.request)
+            .catch(() => caches.match(event.request))
 
     );
 
