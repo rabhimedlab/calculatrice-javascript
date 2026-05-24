@@ -209,3 +209,7 @@ window.addEventListener("load", function() {
 
     updateDisplay();
 });
+
+function toggleTheme() {
+    document.body.classList.toggle("light-mode");
+}
