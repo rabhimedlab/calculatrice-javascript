@@ -178,6 +178,60 @@ function toggleTheme() {
     sauvegarderCalculatrice();
 }
 
+function racineCarree() {
+
+    if (currentValue === "") {
+        return;
+    }
+
+    playClickSound();
+
+    currentValue = String(
+        Math.sqrt(Number(currentValue))
+    );
+
+    updateDisplay();
+}
+
+function carre() {
+
+    if (currentValue === "") {
+        return;
+    }
+
+    playClickSound();
+
+    currentValue = String(
+        Math.pow(Number(currentValue), 2)
+    );
+
+    updateDisplay();
+}
+
+function ajouterPi() {
+
+    playClickSound();
+
+    currentValue = String(Math.PI);
+
+    updateDisplay();
+}
+
+function changerSigne() {
+
+    if (currentValue === "") {
+        return;
+    }
+
+    playClickSound();
+
+    currentValue = String(
+        Number(currentValue) * -1
+    );
+
+    updateDisplay();
+}
+
 document.addEventListener("keydown", function(event) {
     if (event.key >= "0" && event.key <= "9") {
         appendNumber(event.key);

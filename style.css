@@ -117,7 +117,7 @@ h1 {
 
 .buttons {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 14px;
 }
 
@@ -174,9 +174,8 @@ h1 {
 }
 
 .equal {
-    background: linear-gradient(145deg, #5cff7a, #34c759);
-    grid-row: span 2;
-    height: 154px;
+    background: linear-gradient(145deg, #00ff66, #00cc55);
+    color: white;
 }
 
 .special {
@@ -378,4 +377,22 @@ h2 {
     min-height: 22px;
 
     overflow-x: auto;
+}
+
+.scientific {
+    background: linear-gradient(145deg, #8e44ad, #5b2c6f);
+    color: white;
+}
+
+.buttons {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.equal {
+    grid-row: auto;
+    height: 70px;
+}
+
+.zero {
+    grid-column: span 2;
 }
