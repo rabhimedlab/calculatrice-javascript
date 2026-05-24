@@ -250,3 +250,34 @@ h2 {
         transform: translateX(100%) rotate(25deg);
     }
 }
+
+.btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: "";
+    position: absolute;
+
+    width: 0;
+    height: 0;
+
+    top: 50%;
+    left: 50%;
+
+    background: rgba(255,255,255,0.25);
+    border-radius: 50%;
+
+    transform: translate(-50%, -50%);
+    transition: width 0.4s, height 0.4s;
+}
+
+.btn:active::before {
+    width: 220px;
+    height: 220px;
+}
+
+.btn:hover {
+    filter: brightness(1.1);
+}
