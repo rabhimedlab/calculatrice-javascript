@@ -77,6 +77,19 @@ function appendNumber(number) {
     updateDisplay();
 }
 
+function appendParenthesis(parenthesis) {
+    playClickSound();
+
+    if (shouldResetDisplay) {
+        currentValue = "";
+        shouldResetDisplay = false;
+    }
+
+    currentValue += parenthesis;
+
+    updateDisplay();
+}
+
 function chooseOperation(op) {
     if (currentValue === "") {
         return;
