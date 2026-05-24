@@ -66,6 +66,8 @@ function appendNumber(number) {
 
     if (shouldResetDisplay) {
         currentValue = "";
+        previousValue = "";
+        operation = "";
         shouldResetDisplay = false;
     }
 
@@ -82,12 +84,17 @@ function appendParenthesis(parenthesis) {
 
     if (shouldResetDisplay) {
         currentValue = "";
+        previousValue = "";
+        operation = "";
         shouldResetDisplay = false;
     }
 
     currentValue += parenthesis;
-
     updateDisplay();
+}
+
+function isExpressionMode() {
+    return currentValue.includes("(") || currentValue.includes(")");
 }
 
 function chooseOperation(op) {
@@ -97,8 +104,13 @@ function chooseOperation(op) {
 
     playClickSound();
 
-    shouldResetDisplay = false;
+    if (isExpressionMode()) {
+        currentValue += op;
+        updateDisplay();
+        return;
+    }
 
+    shouldResetDisplay = false;
     previousValue = currentValue;
     currentValue = "";
     operation = op;
@@ -113,67 +125,112 @@ function pourcentage() {
 
     playClickSound();
 
-    currentValue = currentValue + "%";
+    currentValue += "%";
     updateDisplay();
 }
 
-function calculate() {
-    if (previousValue === "" || currentValue === "" || operation === "") {
-        return;
-    }
+function calculateExpression(expression) {
+    const cleanedExpression = expression
+        .replace(/×/g, "*")
+        .replace(/÷/g, "/")
+        .replace(/%/g, "/100");
 
-    const number1 = Number(previousValue);
-    let number2 = Number(currentValue);
+    return Function('"use strict"; return (' + cleanedExpression + ')')();
+}
 
-    if ((operation === "+" || operation === "-") && currentValue.includes("%")) {
-        number2 = number1 * Number(currentValue.replace("%", "")) / 100;
-    }
-
-    let result;
-
-    if (operation === "+") {
-        result = number1 + number2;
-    }
-
-    if (operation === "-") {
-        result = number1 - number2;
-    }
-
-    if (operation === "*") {
-        result = number1 * number2;
-    }
-
-    if (operation === "/") {
-        if (number2 === 0) {
-            display.textContent = "Erreur";
-            return;
-        }
-
-        result = number1 / number2;
-    }
-
-    const calculComplet =
-        previousValue + " " + operation + " " + currentValue + " = " + result;
-
-    ajouterHistorique(calculComplet);
-
-    playEqualSound();
-
-    miniDisplay.textContent = previousValue + " " + operation + " " + currentValue;
-    display.textContent = result;
-
+function animateResult() {
     display.classList.add("result-animation");
 
     setTimeout(function() {
         display.classList.remove("result-animation");
     }, 250);
+}
 
-    currentValue = String(result);
-    previousValue = "";
-    operation = "";
-    shouldResetDisplay = true;
+function calculate() {
+    if (currentValue === "") {
+        return;
+    }
 
-    sauvegarderCalculatrice();
+    try {
+        if (isExpressionMode()) {
+            const result = calculateExpression(currentValue);
+
+            if (!isFinite(result)) {
+                display.textContent = "Erreur";
+                return;
+            }
+
+            ajouterHistorique(currentValue + " = " + result);
+
+            playEqualSound();
+
+            miniDisplay.textContent = currentValue;
+            display.textContent = result;
+
+            currentValue = String(result);
+            previousValue = "";
+            operation = "";
+            shouldResetDisplay = true;
+
+            animateResult();
+            sauvegarderCalculatrice();
+            return;
+        }
+
+        if (previousValue === "" || operation === "") {
+            return;
+        }
+
+        const number1 = Number(previousValue);
+        let number2 = Number(currentValue);
+
+        if ((operation === "+" || operation === "-") && currentValue.includes("%")) {
+            number2 = number1 * Number(currentValue.replace("%", "")) / 100;
+        }
+
+        let result;
+
+        if (operation === "+") {
+            result = number1 + number2;
+        } else if (operation === "-") {
+            result = number1 - number2;
+        } else if (operation === "*") {
+            result = number1 * number2;
+        } else if (operation === "/") {
+            if (number2 === 0) {
+                display.textContent = "Erreur";
+                return;
+            }
+
+            result = number1 / number2;
+        }
+
+        if (!isFinite(result)) {
+            display.textContent = "Erreur";
+            return;
+        }
+
+        const calculComplet =
+            previousValue + " " + operation + " " + currentValue + " = " + result;
+
+        ajouterHistorique(calculComplet);
+
+        playEqualSound();
+
+        miniDisplay.textContent = previousValue + " " + operation + " " + currentValue;
+        display.textContent = result;
+
+        currentValue = String(result);
+        previousValue = "";
+        operation = "";
+        shouldResetDisplay = true;
+
+        animateResult();
+        sauvegarderCalculatrice();
+
+    } catch (error) {
+        display.textContent = "Erreur";
+    }
 }
 
 function clearDisplay() {
@@ -186,7 +243,6 @@ function clearDisplay() {
 
     display.textContent = "0";
     miniDisplay.textContent = "";
-
     historique.innerHTML = "";
 
     localStorage.removeItem("historiqueCalculatrice");
@@ -202,6 +258,8 @@ function deleteLast() {
 
     if (shouldResetDisplay) {
         currentValue = "";
+        previousValue = "";
+        operation = "";
         shouldResetDisplay = false;
     } else {
         currentValue = currentValue.slice(0, -1);
@@ -256,8 +314,12 @@ function carre() {
 function ajouterPi() {
     playClickSound();
 
+    if (shouldResetDisplay) {
+        currentValue = "";
+        shouldResetDisplay = false;
+    }
+
     currentValue = String(Math.PI);
-    shouldResetDisplay = false;
     updateDisplay();
 }
 
@@ -376,43 +438,27 @@ document.addEventListener("keydown", function(event) {
 
     if (!isNaN(key) && key !== " ") {
         appendNumber(key);
-    }
-
-    else if (key === ".") {
+    } else if (key === ".") {
         appendNumber(".");
-    }
-
-    else if (key === "+") {
+    } else if (key === "(" || key === ")") {
+        appendParenthesis(key);
+    } else if (key === "+") {
         chooseOperation("+");
-    }
-
-    else if (key === "-") {
+    } else if (key === "-") {
         chooseOperation("-");
-    }
-
-    else if (key === "*") {
+    } else if (key === "*") {
         chooseOperation("*");
-    }
-
-    else if (key === "/") {
+    } else if (key === "/") {
         event.preventDefault();
         chooseOperation("/");
-    }
-
-    else if (key === "%") {
+    } else if (key === "%") {
         pourcentage();
-    }
-
-    else if (key === "Enter" || key === "=") {
+    } else if (key === "Enter" || key === "=") {
         event.preventDefault();
         calculate();
-    }
-
-    else if (key === "Backspace") {
+    } else if (key === "Backspace") {
         deleteLast();
-    }
-
-    else if (key.toLowerCase() === "c") {
+    } else if (key.toLowerCase() === "c") {
         clearDisplay();
     }
 });
