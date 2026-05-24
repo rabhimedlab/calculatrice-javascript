@@ -5,21 +5,13 @@
 }
 
 body {
-    background: linear-gradient(
-        -45deg,
-        #0f2027,
-        #203a43,
-        #2c5364,
-        #1c1c1c
-    );
+    background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364, #1c1c1c);
     background-size: 400% 400%;
     animation: gradientMove 12s ease infinite;
-
     font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
-
     min-height: 100vh;
     color: white;
     overflow: hidden;
@@ -29,13 +21,10 @@ body {
     width: 380px;
     padding: 22px;
     border-radius: 32px;
-
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.15);
-
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
-
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
     transition: 0.4s;
 }
@@ -50,23 +39,36 @@ h1 {
     font-weight: 800;
     letter-spacing: 1.5px;
     margin-bottom: 18px;
-
     color: #ffd166;
+    text-shadow: 0 0 10px rgba(255, 209, 102, 0.7),
+                 0 0 20px rgba(255, 209, 102, 0.4);
+}
 
-    text-shadow:
-        0 0 10px rgba(255, 209, 102, 0.7),
-        0 0 20px rgba(255, 209, 102, 0.4);
+.theme-btn {
+    width: 100%;
+    margin-bottom: 18px;
+    height: 50px;
+    border: none;
+    border-radius: 16px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    background: rgba(255,255,255,0.12);
+    color: white;
+    transition: 0.3s;
+}
+
+.theme-btn:hover {
+    transform: scale(1.03);
 }
 
 .screen {
     position: relative;
     overflow: hidden;
-
     background: black;
     border-radius: 22px;
     padding: 22px;
     margin-bottom: 22px;
-
     text-align: right;
     min-height: 120px;
 }
@@ -74,20 +76,11 @@ h1 {
 .screen::before {
     content: "";
     position: absolute;
-
     top: -50%;
     left: -50%;
-
     width: 200%;
     height: 200%;
-
-    background: linear-gradient(
-        120deg,
-        transparent,
-        rgba(255, 255, 255, 0.08),
-        transparent
-    );
-
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.08), transparent);
     transform: rotate(25deg);
     animation: shine 6s linear infinite;
 }
@@ -95,53 +88,57 @@ h1 {
 #operation-active {
     position: relative;
     z-index: 1;
-
     font-size: 15px;
     opacity: 0.75;
-    margin-bottom: 10px;
-
+    margin-bottom: 6px;
     color: #bbbbbb;
+}
+
+#mini-display {
+    position: relative;
+    z-index: 1;
+    font-size: 18px;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 10px;
+    min-height: 22px;
+    overflow-x: auto;
 }
 
 #display {
     position: relative;
     z-index: 1;
-
     font-size: 42px;
     font-weight: bold;
+    color: white;
     word-wrap: break-word;
     overflow-x: auto;
-
     transition: 0.2s;
+    animation: displayFade 0.15s ease;
 }
 
 .buttons {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 14px;
 }
 
 .btn {
     position: relative;
     overflow: hidden;
-
     height: 70px;
     border: none;
     border-radius: 20px;
-
     font-size: 24px;
     font-weight: bold;
-
     cursor: pointer;
-
     background: rgba(60, 60, 60, 0.85);
     color: white;
-
     transition: 0.2s;
 }
 
 .btn:hover {
     transform: scale(1.05);
+    filter: brightness(1.1);
 }
 
 .btn:active {
@@ -151,16 +148,12 @@ h1 {
 .btn::after {
     content: "";
     position: absolute;
-
     width: 120%;
     height: 120%;
-
     top: -110%;
     left: -110%;
-
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255,255,255,0.15);
     border-radius: 50%;
-
     transition: 0.4s;
 }
 
@@ -174,37 +167,41 @@ h1 {
 }
 
 .equal {
-    background: linear-gradient(145deg, #00ff66, #00cc55);
-    color: white;
+    background: linear-gradient(145deg, #5cff7a, #34c759);
+    height: 70px;
+    grid-row: auto;
 }
 
 .special {
-    background: rgba(180, 180, 180, 0.85);
+    background: rgba(230, 230, 230, 0.9);
     color: #222;
 }
 
+.scientific {
+    background: linear-gradient(145deg, #b026ff, #8e44ad);
+    color: white;
+}
+
 .zero {
-    grid-column: span 2;
+    grid-column: auto;
 }
 
 h2 {
     margin-top: 22px;
     margin-bottom: 10px;
-
-    font-size: 28px;
+    font-size: 26px;
     color: white;
 }
 
 #historique {
     list-style: none;
-    max-height: 150px;
+    max-height: 120px;
     overflow-y: auto;
 }
 
 #historique li {
     padding: 8px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-
+    border-bottom: 1px solid rgba(255,255,255,0.2);
     color: #eeeeee;
 }
 
@@ -212,115 +209,12 @@ h2 {
     animation: resultPop 0.25s ease;
 }
 
-@keyframes resultPop {
-    0% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.06);
-    }
-
-    100% {
-        transform: scale(1);
-    }
-}
-
-@keyframes gradientMove {
-    0% {
-        background-position: 0% 50%;
-    }
-
-    50% {
-        background-position: 100% 50%;
-    }
-
-    100% {
-        background-position: 0% 50%;
-    }
-}
-
-@keyframes shine {
-    0% {
-        transform: translateX(-100%) rotate(25deg);
-    }
-
-    100% {
-        transform: translateX(100%) rotate(25deg);
-    }
-}
-
-.btn {
-    position: relative;
-    overflow: hidden;
-}
-
-.btn::before {
-    content: "";
-    position: absolute;
-
-    width: 0;
-    height: 0;
-
-    top: 50%;
-    left: 50%;
-
-    background: rgba(255,255,255,0.25);
-    border-radius: 50%;
-
-    transform: translate(-50%, -50%);
-    transition: width 0.4s, height 0.4s;
-}
-
-.btn:active::before {
-    width: 220px;
-    height: 220px;
-}
-
-.btn:hover {
-    filter: brightness(1.1);
-}
-
-.theme-btn {
-    width: 100%;
-    margin-bottom: 18px;
-
-    height: 50px;
-
-    border: none;
-    border-radius: 16px;
-
-    font-size: 20px;
-    font-weight: bold;
-
-    cursor: pointer;
-
-    background: rgba(255,255,255,0.12);
-    color: white;
-
-    transition: 0.3s;
-}
-
-.theme-btn:hover {
-    transform: scale(1.03);
-}
-
 .light-mode {
-    background:
-        linear-gradient(
-            -45deg,
-            #f5f7fa,
-            #c3cfe2,
-            #e2ebf0,
-            #ffffff
-        );
+    background: linear-gradient(-45deg, #f5f7fa, #c3cfe2, #e2ebf0, #ffffff);
 }
 
 .light-mode .phone-calculator {
     background: rgba(255,255,255,0.65);
-
-    border: 1px solid rgba(255,255,255,0.4);
-
     color: black;
 }
 
@@ -332,67 +226,40 @@ h2 {
     color: black;
 }
 
-.light-mode #operation-active {
+.light-mode #operation-active,
+.light-mode #mini-display {
     color: #444;
 }
 
-.light-mode .btn {
-    background: rgba(230,230,230,0.9);
-    color: black;
-}
-
-.light-mode h2 {
-    color: black;
-}
-
+.light-mode h2,
 .light-mode #historique li {
     color: black;
-    border-bottom: 1px solid rgba(0,0,0,0.1);
 }
 
-#display {
-    animation: displayFade 0.15s ease;
+@keyframes resultPop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+    100% { transform: scale(1); }
 }
 
 @keyframes displayFade {
-
     0% {
         opacity: 0.4;
         transform: translateY(6px);
     }
-
     100% {
         opacity: 1;
         transform: translateY(0);
     }
 }
 
-#mini-display {
-    font-size: 18px;
-    color: rgba(255,255,255,0.6);
-    margin-bottom: 10px;
-
-    text-align: right;
-
-    min-height: 22px;
-
-    overflow-x: auto;
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
-.scientific {
-    background: linear-gradient(145deg, #8e44ad, #5b2c6f);
-    color: white;
-}
-
-.buttons {
-    grid-template-columns: repeat(4, 1fr);
-}
-
-.equal {
-    grid-row: auto;
-    height: 70px;
-}
-
-.zero {
-    grid-column: span 2;
+@keyframes shine {
+    0% { transform: translateX(-100%) rotate(25deg); }
+    100% { transform: translateX(100%) rotate(25deg); }
 }

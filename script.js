@@ -4,11 +4,14 @@ const equalSound = new Audio("sounds/equal.mp3");
 let currentValue = "";
 let previousValue = "";
 let operation = "";
+let angleMode = "DEG";
 
 const display = document.getElementById("display");
 const miniDisplay = document.getElementById("mini-display");
 const operationActive = document.getElementById("operation-active");
 const historique = document.getElementById("historique");
+const angleModeButton =
+    document.getElementById("angle-mode");
 
 function playClickSound() {
     clickSound.currentTime = 0;
@@ -227,6 +230,101 @@ function changerSigne() {
 
     currentValue = String(
         Number(currentValue) * -1
+    );
+
+    updateDisplay();
+}
+
+function changerModeAngle() {
+
+    playClickSound();
+
+    if (angleMode === "DEG") {
+
+        angleMode = "RAD";
+
+    } else {
+
+        angleMode = "DEG";
+
+    }
+
+    angleModeButton.textContent = angleMode;
+}
+
+function sinus() {
+
+    if (currentValue === "") {
+        return;
+    }
+
+    playClickSound();
+
+    let valeur = Number(currentValue);
+
+    if (angleMode === "DEG") {
+        valeur = valeur * Math.PI / 180;
+    }
+
+    currentValue = String(
+        Math.sin(valeur)
+    );
+
+    updateDisplay();
+}
+
+function cosinus() {
+
+    if (currentValue === "") {
+        return;
+    }
+
+    playClickSound();
+
+    let valeur = Number(currentValue);
+
+    if (angleMode === "DEG") {
+        valeur = valeur * Math.PI / 180;
+    }
+
+    currentValue = String(
+        Math.cos(valeur)
+    );
+
+    updateDisplay();
+}
+
+function tangente() {
+
+    if (currentValue === "") {
+        return;
+    }
+
+    playClickSound();
+
+    let valeur = Number(currentValue);
+
+    if (angleMode === "DEG") {
+        valeur = valeur * Math.PI / 180;
+    }
+
+    currentValue = String(
+        Math.tan(valeur)
+    );
+
+    updateDisplay();
+}
+
+function logarithme() {
+
+    if (currentValue === "") {
+        return;
+    }
+
+    playClickSound();
+
+    currentValue = String(
+        Math.log10(Number(currentValue))
     );
 
     updateDisplay();
