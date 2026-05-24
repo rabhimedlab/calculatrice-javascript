@@ -6,6 +6,7 @@ let previousValue = "";
 let operation = "";
 let angleMode = "DEG";
 let memoryValue = 0;
+let shouldResetDisplay = false;
 
 const display = document.getElementById("display");
 const miniDisplay = document.getElementById("mini-display");
@@ -43,11 +44,7 @@ function sauvegarderCalculatrice() {
 }
 
 function updateMemoryIndicator() {
-    if (memoryValue !== 0) {
-        memoryIndicator.textContent = "MEM";
-    } else {
-        memoryIndicator.textContent = "";
-    }
+    memoryIndicator.textContent = memoryValue !== 0 ? "MEM" : "";
 }
 
 function updateDisplay() {
@@ -67,6 +64,11 @@ function updateDisplay() {
 function appendNumber(number) {
     playClickSound();
 
+    if (shouldResetDisplay) {
+        currentValue = "";
+        shouldResetDisplay = false;
+    }
+
     if (number === "." && currentValue.includes(".")) {
         return;
     }
@@ -81,6 +83,8 @@ function chooseOperation(op) {
     }
 
     playClickSound();
+
+    shouldResetDisplay = false;
 
     previousValue = currentValue;
     currentValue = "";
@@ -154,6 +158,7 @@ function calculate() {
     currentValue = String(result);
     previousValue = "";
     operation = "";
+    shouldResetDisplay = true;
 
     sauvegarderCalculatrice();
 }
@@ -164,6 +169,7 @@ function clearDisplay() {
     currentValue = "";
     previousValue = "";
     operation = "";
+    shouldResetDisplay = false;
 
     display.textContent = "0";
     miniDisplay.textContent = "";
@@ -181,7 +187,13 @@ function clearDisplay() {
 function deleteLast() {
     playClickSound();
 
-    currentValue = currentValue.slice(0, -1);
+    if (shouldResetDisplay) {
+        currentValue = "";
+        shouldResetDisplay = false;
+    } else {
+        currentValue = currentValue.slice(0, -1);
+    }
+
     updateDisplay();
 }
 
@@ -212,6 +224,7 @@ function racineCarree() {
     playClickSound();
 
     currentValue = String(Math.sqrt(Number(currentValue)));
+    shouldResetDisplay = true;
     updateDisplay();
 }
 
@@ -223,6 +236,7 @@ function carre() {
     playClickSound();
 
     currentValue = String(Math.pow(Number(currentValue), 2));
+    shouldResetDisplay = true;
     updateDisplay();
 }
 
@@ -230,6 +244,7 @@ function ajouterPi() {
     playClickSound();
 
     currentValue = String(Math.PI);
+    shouldResetDisplay = false;
     updateDisplay();
 }
 
@@ -247,11 +262,7 @@ function changerSigne() {
 function changerModeAngle() {
     playClickSound();
 
-    if (angleMode === "DEG") {
-        angleMode = "RAD";
-    } else {
-        angleMode = "DEG";
-    }
+    angleMode = angleMode === "DEG" ? "RAD" : "DEG";
 
     angleModeButton.textContent = angleMode;
     updateDisplay();
@@ -273,6 +284,7 @@ function sinus() {
     playClickSound();
 
     currentValue = String(Math.sin(convertirAngle(Number(currentValue))));
+    shouldResetDisplay = true;
     updateDisplay();
 }
 
@@ -284,6 +296,7 @@ function cosinus() {
     playClickSound();
 
     currentValue = String(Math.cos(convertirAngle(Number(currentValue))));
+    shouldResetDisplay = true;
     updateDisplay();
 }
 
@@ -295,6 +308,7 @@ function tangente() {
     playClickSound();
 
     currentValue = String(Math.tan(convertirAngle(Number(currentValue))));
+    shouldResetDisplay = true;
     updateDisplay();
 }
 
@@ -306,6 +320,7 @@ function logarithme() {
     playClickSound();
 
     currentValue = String(Math.log10(Number(currentValue)));
+    shouldResetDisplay = true;
     updateDisplay();
 }
 
@@ -329,6 +344,8 @@ function memoryRecall() {
     playClickSound();
 
     currentValue = String(memoryValue);
+    shouldResetDisplay = false;
+
     updateMemoryIndicator();
     updateDisplay();
 }
@@ -344,7 +361,7 @@ function memoryClear() {
 document.addEventListener("keydown", function(event) {
     const key = event.key;
 
-    if (!isNaN(key)) {
+    if (!isNaN(key) && key !== " ") {
         appendNumber(key);
     }
 
