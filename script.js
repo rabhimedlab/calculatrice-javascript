@@ -40,6 +40,17 @@ function chooseOperation(op) {
     updateDisplay();
 }
 
+function pourcentage() {
+
+    if (currentValue === "") {
+        return;
+    }
+
+    currentValue = String(Number(currentValue) / 100);
+
+    updateDisplay();
+}
+
 function calculate() {
 
     if (previousValue === "" || currentValue === "" || operation === "") {
