@@ -1,3 +1,6 @@
+const clickSound = new Audio("sounds/click.mp3");
+const equalSound = new Audio("sounds/equal.mp3");
+
 let currentValue = "";
 let previousValue = "";
 let operation = "";
@@ -6,8 +9,17 @@ const display = document.getElementById("display");
 const operationActive = document.getElementById("operation-active");
 const historique = document.getElementById("historique");
 
-function updateDisplay() {
+function playClickSound() {
+    clickSound.currentTime = 0;
+    clickSound.play();
+}
 
+function playEqualSound() {
+    equalSound.currentTime = 0;
+    equalSound.play();
+}
+
+function updateDisplay() {
     if (previousValue !== "" && operation !== "") {
         display.textContent = previousValue + " " + operation + " " + currentValue;
     } else {
@@ -16,6 +28,7 @@ function updateDisplay() {
 }
 
 function appendNumber(number) {
+    playClickSound();
 
     if (number === "." && currentValue.includes(".")) {
         return;
@@ -26,10 +39,11 @@ function appendNumber(number) {
 }
 
 function chooseOperation(op) {
-
     if (currentValue === "") {
         return;
     }
+
+    playClickSound();
 
     previousValue = currentValue;
     currentValue = "";
@@ -41,24 +55,30 @@ function chooseOperation(op) {
 }
 
 function pourcentage() {
-
     if (currentValue === "") {
         return;
     }
 
-    currentValue = String(Number(currentValue) / 100);
+    playClickSound();
+
+    currentValue = currentValue + "%";
 
     updateDisplay();
 }
 
 function calculate() {
-
     if (previousValue === "" || currentValue === "" || operation === "") {
         return;
     }
 
     const number1 = Number(previousValue);
-    const number2 = Number(currentValue);
+    let number2 = Number(currentValue);
+
+    if (operation === "+" || operation === "-") {
+        if (currentValue.includes("%")) {
+            number2 = number1 * Number(currentValue.replace("%", "")) / 100;
+        }
+    }
 
     let result;
 
@@ -75,7 +95,6 @@ function calculate() {
     }
 
     if (operation === "/") {
-
         if (number2 === 0) {
             display.textContent = "Erreur";
             return;
@@ -88,6 +107,8 @@ function calculate() {
         previousValue + " " + operation + " " + currentValue + " = " + result;
 
     ajouterHistorique(calculComplet);
+
+    playEqualSound();
 
     display.textContent = calculComplet;
 
@@ -105,6 +126,7 @@ function calculate() {
 }
 
 function clearDisplay() {
+    playClickSound();
 
     currentValue = "";
     previousValue = "";
@@ -118,13 +140,14 @@ function clearDisplay() {
 }
 
 function deleteLast() {
+    playClickSound();
 
     currentValue = currentValue.slice(0, -1);
+
     updateDisplay();
 }
 
 function ajouterHistorique(texte) {
-
     historique.innerHTML += "<li>" + texte + "</li>";
 
     localStorage.setItem(
@@ -134,7 +157,6 @@ function ajouterHistorique(texte) {
 }
 
 document.addEventListener("keydown", function(event) {
-
     if (event.key >= "0" && event.key <= "9") {
         appendNumber(event.key);
     }
@@ -160,6 +182,10 @@ document.addEventListener("keydown", function(event) {
         chooseOperation("/");
     }
 
+    if (event.key === "%") {
+        pourcentage();
+    }
+
     if (event.key === "=" || event.key === "Enter") {
         calculate();
     }
@@ -174,7 +200,6 @@ document.addEventListener("keydown", function(event) {
 });
 
 window.addEventListener("load", function() {
-
     const historiqueSauvegarde =
         localStorage.getItem("historiqueCalculatrice");
 
