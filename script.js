@@ -5,13 +5,14 @@ let currentValue = "";
 let previousValue = "";
 let operation = "";
 let angleMode = "DEG";
+let memoryValue = 0;
 
 const display = document.getElementById("display");
 const miniDisplay = document.getElementById("mini-display");
 const operationActive = document.getElementById("operation-active");
 const historique = document.getElementById("historique");
-const angleModeButton =
-    document.getElementById("angle-mode");
+const angleModeButton = document.getElementById("angle-mode");
+const memoryIndicator = document.getElementById("memory-indicator");
 
 function playClickSound() {
     clickSound.currentTime = 0;
@@ -37,6 +38,16 @@ function sauvegarderCalculatrice() {
     localStorage.setItem("currentValue", currentValue);
     localStorage.setItem("previousValue", previousValue);
     localStorage.setItem("operation", operation);
+    localStorage.setItem("angleMode", angleMode);
+    localStorage.setItem("memoryValue", memoryValue);
+}
+
+function updateMemoryIndicator() {
+    if (memoryValue !== 0) {
+        memoryIndicator.textContent = "MEM";
+    } else {
+        memoryIndicator.textContent = "";
+    }
 }
 
 function updateDisplay() {
@@ -48,6 +59,8 @@ function updateDisplay() {
         display.textContent = currentValue || "0";
     }
 
+    operationActive.textContent = angleMode;
+    updateMemoryIndicator();
     sauvegarderCalculatrice();
 }
 
@@ -73,8 +86,6 @@ function chooseOperation(op) {
     currentValue = "";
     operation = op;
 
-    operationActive.textContent = op;
-
     updateDisplay();
 }
 
@@ -97,10 +108,8 @@ function calculate() {
     const number1 = Number(previousValue);
     let number2 = Number(currentValue);
 
-    if (operation === "+" || operation === "-") {
-        if (currentValue.includes("%")) {
-            number2 = number1 * Number(currentValue.replace("%", "")) / 100;
-        }
+    if ((operation === "+" || operation === "-") && currentValue.includes("%")) {
+        number2 = number1 * Number(currentValue.replace("%", "")) / 100;
     }
 
     let result;
@@ -146,8 +155,6 @@ function calculate() {
     previousValue = "";
     operation = "";
 
-    operationActive.textContent = "";
-
     sauvegarderCalculatrice();
 }
 
@@ -160,7 +167,6 @@ function clearDisplay() {
 
     display.textContent = "0";
     miniDisplay.textContent = "";
-    operationActive.textContent = "";
 
     historique.innerHTML = "";
 
@@ -169,7 +175,7 @@ function clearDisplay() {
     localStorage.removeItem("previousValue");
     localStorage.removeItem("operation");
 
-    sauvegarderCalculatrice();
+    updateDisplay();
 }
 
 function deleteLast() {
@@ -184,199 +190,199 @@ function ajouterHistorique(texte) {
     sauvegarderCalculatrice();
 }
 
+function clearHistory() {
+    playClickSound();
+
+    historique.innerHTML = "";
+    localStorage.removeItem("historiqueCalculatrice");
+
+    sauvegarderCalculatrice();
+}
+
 function toggleTheme() {
     document.body.classList.toggle("light-mode");
     sauvegarderCalculatrice();
 }
 
 function racineCarree() {
-
     if (currentValue === "") {
         return;
     }
 
     playClickSound();
 
-    currentValue = String(
-        Math.sqrt(Number(currentValue))
-    );
-
+    currentValue = String(Math.sqrt(Number(currentValue)));
     updateDisplay();
 }
 
 function carre() {
-
     if (currentValue === "") {
         return;
     }
 
     playClickSound();
 
-    currentValue = String(
-        Math.pow(Number(currentValue), 2)
-    );
-
+    currentValue = String(Math.pow(Number(currentValue), 2));
     updateDisplay();
 }
 
 function ajouterPi() {
-
     playClickSound();
 
     currentValue = String(Math.PI);
-
     updateDisplay();
 }
 
 function changerSigne() {
-
     if (currentValue === "") {
         return;
     }
 
     playClickSound();
 
-    currentValue = String(
-        Number(currentValue) * -1
-    );
-
+    currentValue = String(Number(currentValue) * -1);
     updateDisplay();
 }
 
 function changerModeAngle() {
-
     playClickSound();
 
     if (angleMode === "DEG") {
-
         angleMode = "RAD";
-
     } else {
-
         angleMode = "DEG";
-
     }
 
     angleModeButton.textContent = angleMode;
+    updateDisplay();
+}
+
+function convertirAngle(valeur) {
+    if (angleMode === "DEG") {
+        return valeur * Math.PI / 180;
+    }
+
+    return valeur;
 }
 
 function sinus() {
-
     if (currentValue === "") {
         return;
     }
 
     playClickSound();
 
-    let valeur = Number(currentValue);
-
-    if (angleMode === "DEG") {
-        valeur = valeur * Math.PI / 180;
-    }
-
-    currentValue = String(
-        Math.sin(valeur)
-    );
-
+    currentValue = String(Math.sin(convertirAngle(Number(currentValue))));
     updateDisplay();
 }
 
 function cosinus() {
-
     if (currentValue === "") {
         return;
     }
 
     playClickSound();
 
-    let valeur = Number(currentValue);
-
-    if (angleMode === "DEG") {
-        valeur = valeur * Math.PI / 180;
-    }
-
-    currentValue = String(
-        Math.cos(valeur)
-    );
-
+    currentValue = String(Math.cos(convertirAngle(Number(currentValue))));
     updateDisplay();
 }
 
 function tangente() {
-
     if (currentValue === "") {
         return;
     }
 
     playClickSound();
 
-    let valeur = Number(currentValue);
-
-    if (angleMode === "DEG") {
-        valeur = valeur * Math.PI / 180;
-    }
-
-    currentValue = String(
-        Math.tan(valeur)
-    );
-
+    currentValue = String(Math.tan(convertirAngle(Number(currentValue))));
     updateDisplay();
 }
 
 function logarithme() {
-
     if (currentValue === "") {
         return;
     }
 
     playClickSound();
 
-    currentValue = String(
-        Math.log10(Number(currentValue))
-    );
-
+    currentValue = String(Math.log10(Number(currentValue)));
     updateDisplay();
 }
 
+function memoryAdd() {
+    playClickSound();
+
+    memoryValue += Number(currentValue) || 0;
+    updateMemoryIndicator();
+    sauvegarderCalculatrice();
+}
+
+function memorySubtract() {
+    playClickSound();
+
+    memoryValue -= Number(currentValue) || 0;
+    updateMemoryIndicator();
+    sauvegarderCalculatrice();
+}
+
+function memoryRecall() {
+    playClickSound();
+
+    currentValue = String(memoryValue);
+    updateMemoryIndicator();
+    updateDisplay();
+}
+
+function memoryClear() {
+    playClickSound();
+
+    memoryValue = 0;
+    updateMemoryIndicator();
+    sauvegarderCalculatrice();
+}
+
 document.addEventListener("keydown", function(event) {
-    if (event.key >= "0" && event.key <= "9") {
-        appendNumber(event.key);
+    const key = event.key;
+
+    if (!isNaN(key)) {
+        appendNumber(key);
     }
 
-    if (event.key === ".") {
+    else if (key === ".") {
         appendNumber(".");
     }
 
-    if (event.key === "+") {
+    else if (key === "+") {
         chooseOperation("+");
     }
 
-    if (event.key === "-") {
+    else if (key === "-") {
         chooseOperation("-");
     }
 
-    if (event.key === "*") {
+    else if (key === "*") {
         chooseOperation("*");
     }
 
-    if (event.key === "/") {
+    else if (key === "/") {
         event.preventDefault();
         chooseOperation("/");
     }
 
-    if (event.key === "%") {
+    else if (key === "%") {
         pourcentage();
     }
 
-    if (event.key === "=" || event.key === "Enter") {
+    else if (key === "Enter" || key === "=") {
+        event.preventDefault();
         calculate();
     }
 
-    if (event.key === "Backspace") {
+    else if (key === "Backspace") {
         deleteLast();
     }
 
-    if (event.key === "Escape") {
+    else if (key.toLowerCase() === "c") {
         clearDisplay();
     }
 });
@@ -387,6 +393,8 @@ window.addEventListener("load", function() {
     const currentValueSauvegarde = localStorage.getItem("currentValue");
     const previousValueSauvegarde = localStorage.getItem("previousValue");
     const operationSauvegarde = localStorage.getItem("operation");
+    const angleModeSauvegarde = localStorage.getItem("angleMode");
+    const memoryValueSauvegarde = localStorage.getItem("memoryValue");
 
     if (historiqueSauvegarde) {
         historique.innerHTML = historiqueSauvegarde;
@@ -406,9 +414,19 @@ window.addEventListener("load", function() {
 
     if (operationSauvegarde) {
         operation = operationSauvegarde;
-        operationActive.textContent = operationSauvegarde;
     }
 
+    if (angleModeSauvegarde) {
+        angleMode = angleModeSauvegarde;
+    }
+
+    if (memoryValueSauvegarde) {
+        memoryValue = Number(memoryValueSauvegarde);
+    }
+
+    angleModeButton.textContent = angleMode;
+
+    updateMemoryIndicator();
     updateDisplay();
 });
 
@@ -420,13 +438,4 @@ if ("serviceWorker" in navigator) {
                 console.log("Service Worker enregistré");
             });
     });
-}
-
-function clearHistory() {
-
-    playClickSound();
-
-    historique.innerHTML = "";
-
-    localStorage.removeItem("historiqueCalculatrice");
 }
