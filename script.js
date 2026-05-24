@@ -6,6 +6,7 @@ let previousValue = "";
 let operation = "";
 
 const display = document.getElementById("display");
+const miniDisplay = document.getElementById("mini-display");
 const operationActive = document.getElementById("operation-active");
 const historique = document.getElementById("historique");
 
@@ -19,12 +20,24 @@ function playEqualSound() {
     equalSound.play();
 }
 
+function sauvegarderCalculatrice() {
+    localStorage.setItem("historiqueCalculatrice", historique.innerHTML);
+    localStorage.setItem("themeCalculatrice", document.body.classList.contains("light-mode"));
+    localStorage.setItem("currentValue", currentValue);
+    localStorage.setItem("previousValue", previousValue);
+    localStorage.setItem("operation", operation);
+}
+
 function updateDisplay() {
     if (previousValue !== "" && operation !== "") {
-        display.textContent = previousValue + " " + operation + " " + currentValue;
+        miniDisplay.textContent = previousValue + " " + operation;
+        display.textContent = currentValue || "0";
     } else {
+        miniDisplay.textContent = "";
         display.textContent = currentValue || "0";
     }
+
+    sauvegarderCalculatrice();
 }
 
 function appendNumber(number) {
@@ -62,7 +75,6 @@ function pourcentage() {
     playClickSound();
 
     currentValue = currentValue + "%";
-
     updateDisplay();
 }
 
@@ -110,7 +122,8 @@ function calculate() {
 
     playEqualSound();
 
-    display.textContent = calculComplet;
+    miniDisplay.textContent = previousValue + " " + operation + " " + currentValue;
+    display.textContent = result;
 
     display.classList.add("result-animation");
 
@@ -123,6 +136,8 @@ function calculate() {
     operation = "";
 
     operationActive.textContent = "";
+
+    sauvegarderCalculatrice();
 }
 
 function clearDisplay() {
@@ -133,27 +148,34 @@ function clearDisplay() {
     operation = "";
 
     display.textContent = "0";
+    miniDisplay.textContent = "";
     operationActive.textContent = "";
 
     historique.innerHTML = "";
+
     localStorage.removeItem("historiqueCalculatrice");
+    localStorage.removeItem("currentValue");
+    localStorage.removeItem("previousValue");
+    localStorage.removeItem("operation");
+
+    sauvegarderCalculatrice();
 }
 
 function deleteLast() {
     playClickSound();
 
     currentValue = currentValue.slice(0, -1);
-
     updateDisplay();
 }
 
 function ajouterHistorique(texte) {
     historique.innerHTML += "<li>" + texte + "</li>";
+    sauvegarderCalculatrice();
+}
 
-    localStorage.setItem(
-        "historiqueCalculatrice",
-        historique.innerHTML
-    );
+function toggleTheme() {
+    document.body.classList.toggle("light-mode");
+    sauvegarderCalculatrice();
 }
 
 document.addEventListener("keydown", function(event) {
@@ -200,31 +222,42 @@ document.addEventListener("keydown", function(event) {
 });
 
 window.addEventListener("load", function() {
-    const historiqueSauvegarde =
-        localStorage.getItem("historiqueCalculatrice");
+    const historiqueSauvegarde = localStorage.getItem("historiqueCalculatrice");
+    const themeSauvegarde = localStorage.getItem("themeCalculatrice");
+    const currentValueSauvegarde = localStorage.getItem("currentValue");
+    const previousValueSauvegarde = localStorage.getItem("previousValue");
+    const operationSauvegarde = localStorage.getItem("operation");
 
     if (historiqueSauvegarde) {
         historique.innerHTML = historiqueSauvegarde;
     }
 
+    if (themeSauvegarde === "true") {
+        document.body.classList.add("light-mode");
+    }
+
+    if (currentValueSauvegarde) {
+        currentValue = currentValueSauvegarde;
+    }
+
+    if (previousValueSauvegarde) {
+        previousValue = previousValueSauvegarde;
+    }
+
+    if (operationSauvegarde) {
+        operation = operationSauvegarde;
+        operationActive.textContent = operationSauvegarde;
+    }
+
     updateDisplay();
 });
 
-function toggleTheme() {
-    document.body.classList.toggle("light-mode");
-}
-
 if ("serviceWorker" in navigator) {
-
     window.addEventListener("load", function() {
-
         navigator.serviceWorker
             .register("./service-worker.js")
-
             .then(function() {
                 console.log("Service Worker enregistré");
             });
-
     });
-
 }

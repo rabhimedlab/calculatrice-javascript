@@ -350,3 +350,32 @@ h2 {
     color: black;
     border-bottom: 1px solid rgba(0,0,0,0.1);
 }
+
+#display {
+    animation: displayFade 0.15s ease;
+}
+
+@keyframes displayFade {
+
+    0% {
+        opacity: 0.4;
+        transform: translateY(6px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#mini-display {
+    font-size: 18px;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 10px;
+
+    text-align: right;
+
+    min-height: 22px;
+
+    overflow-x: auto;
+}
