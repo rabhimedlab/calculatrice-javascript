@@ -50,6 +50,10 @@ function updateMemoryIndicator() {
 function formatExpression(expression) {
     return expression
         .replace(/Math\.sqrt\(/g, "√(")
+        .replace(/Math\.log10\(/g, "log(")
+        .replace(/Math\.sin\(/g, "sin(")
+        .replace(/Math\.cos\(/g, "cos(")
+        .replace(/Math\.tan\(/g, "tan(")
         .replace(/\*\*/g, "^");
 }
 
@@ -154,6 +158,23 @@ function pourcentage() {
 }
 
 function calculateExpression(expression) {
+    if (angleMode === "DEG") {
+
+    expression = expression.replace(
+        /Math\.sin\(([^)]+)\)/g,
+        "Math.sin(($1) * Math.PI / 180)"
+    );
+
+    expression = expression.replace(
+        /Math\.cos\(([^)]+)\)/g,
+        "Math.cos(($1) * Math.PI / 180)"
+    );
+
+    expression = expression.replace(
+        /Math\.tan\(([^)]+)\)/g,
+        "Math.tan(($1) * Math.PI / 180)"
+    );
+}
     const cleanedExpression = expression
         .replace(/×/g, "*")
         .replace(/÷/g, "/")
@@ -165,7 +186,7 @@ function calculateExpression(expression) {
 function animateResult() {
     display.classList.add("result-animation");
 
-    setTimeout(function() {
+    setTimeout(function () {
         display.classList.remove("result-animation");
     }, 250);
 }
@@ -377,50 +398,54 @@ function convertirAngle(valeur) {
 }
 
 function sinus() {
-    if (currentValue === "") {
-        return;
-    }
-
     playClickSound();
 
-    currentValue = String(Math.sin(convertirAngle(Number(currentValue))));
-    shouldResetDisplay = true;
+    if (shouldResetDisplay) {
+        currentValue = "";
+        shouldResetDisplay = false;
+    }
+
+    currentValue += "Math.sin(";
+
     updateDisplay();
 }
 
 function cosinus() {
-    if (currentValue === "") {
-        return;
-    }
-
     playClickSound();
 
-    currentValue = String(Math.cos(convertirAngle(Number(currentValue))));
-    shouldResetDisplay = true;
+    if (shouldResetDisplay) {
+        currentValue = "";
+        shouldResetDisplay = false;
+    }
+
+    currentValue += "Math.cos(";
+
     updateDisplay();
 }
 
 function tangente() {
-    if (currentValue === "") {
-        return;
-    }
-
     playClickSound();
 
-    currentValue = String(Math.tan(convertirAngle(Number(currentValue))));
-    shouldResetDisplay = true;
+    if (shouldResetDisplay) {
+        currentValue = "";
+        shouldResetDisplay = false;
+    }
+
+    currentValue += "Math.tan(";
+
     updateDisplay();
 }
 
 function logarithme() {
-    if (currentValue === "") {
-        return;
-    }
-
     playClickSound();
 
-    currentValue = String(Math.log10(Number(currentValue)));
-    shouldResetDisplay = true;
+    if (shouldResetDisplay) {
+        currentValue = "";
+        shouldResetDisplay = false;
+    }
+
+    currentValue += "Math.log10(";
+
     updateDisplay();
 }
 
@@ -458,7 +483,7 @@ function memoryClear() {
     sauvegarderCalculatrice();
 }
 
-document.addEventListener("keydown", function(event) {
+document.addEventListener("keydown", function (event) {
     const key = event.key;
 
     if (!isNaN(key) && key !== " ") {
@@ -488,7 +513,7 @@ document.addEventListener("keydown", function(event) {
     }
 });
 
-window.addEventListener("load", function() {
+window.addEventListener("load", function () {
     const historiqueSauvegarde = localStorage.getItem("historiqueCalculatrice");
     const themeSauvegarde = localStorage.getItem("themeCalculatrice");
     const currentValueSauvegarde = localStorage.getItem("currentValue");
@@ -532,10 +557,10 @@ window.addEventListener("load", function() {
 });
 
 if ("serviceWorker" in navigator) {
-    window.addEventListener("load", function() {
+    window.addEventListener("load", function () {
         navigator.serviceWorker
             .register("./service-worker.js")
-            .then(function() {
+            .then(function () {
                 console.log("Service Worker enregistré");
             });
     });
