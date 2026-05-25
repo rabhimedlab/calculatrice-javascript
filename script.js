@@ -579,3 +579,21 @@ if ("serviceWorker" in navigator) {
     });
 }
 
+if ("serviceWorker" in navigator) {
+
+    window.addEventListener("load", function () {
+
+        navigator.serviceWorker
+            .register("./service-worker.js")
+
+            .then(function () {
+                console.log("Service Worker enregistré");
+            })
+
+            .catch(function (error) {
+                console.log("Erreur Service Worker :", error);
+            });
+
+    });
+
+}

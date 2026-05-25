@@ -1,11 +1,12 @@
 {
     "name": "Amane Calculator",
-    "short_name": "AmaneCalc",
-    "start_url": ".",
+    "short_name": "Calculator",
+    "start_url": "./index.html",
     "display": "standalone",
-    "background_color": "#1e1e1e",
-    "theme_color": "#ff9500",
+    "background_color": "#0f2027",
+    "theme_color": "#f7b733",
     "orientation": "portrait",
+    "scope": "./",
     "icons": [
         {
             "src": "icon-192.png",

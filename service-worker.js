@@ -1,6 +1,6 @@
-const CACHE_NAME = "amane-calculator-v2";
+const CACHE_NAME = "amane-calculator-v3";
 
-const urlsToCache = [
+const FILES_TO_CACHE = [
     "./",
     "./index.html",
     "./style.css",
@@ -12,52 +12,36 @@ const urlsToCache = [
     "./sounds/equal.mp3"
 ];
 
-self.addEventListener("install", event => {
-
+self.addEventListener("install", function(event) {
     self.skipWaiting();
 
     event.waitUntil(
-
-        caches.open(CACHE_NAME)
-            .then(cache => {
-                return cache.addAll(urlsToCache);
-            })
-
+        caches.open(CACHE_NAME).then(function(cache) {
+            return cache.addAll(FILES_TO_CACHE);
+        })
     );
 });
 
-self.addEventListener("activate", event => {
-
+self.addEventListener("activate", function(event) {
     event.waitUntil(
-
-        caches.keys().then(cacheNames => {
-
+        caches.keys().then(function(cacheNames) {
             return Promise.all(
-
-                cacheNames.map(cache => {
-
-                    if (cache !== CACHE_NAME) {
-                        return caches.delete(cache);
+                cacheNames.map(function(cacheName) {
+                    if (cacheName !== CACHE_NAME) {
+                        return caches.delete(cacheName);
                     }
-
                 })
-
             );
-
         })
-
     );
 
     self.clients.claim();
 });
 
-self.addEventListener("fetch", event => {
-
+self.addEventListener("fetch", function(event) {
     event.respondWith(
-
-        fetch(event.request)
-            .catch(() => caches.match(event.request))
-
+        fetch(event.request).catch(function() {
+            return caches.match(event.request);
+        })
     );
-
 });
