@@ -47,10 +47,16 @@ function updateMemoryIndicator() {
     memoryIndicator.textContent = memoryValue !== 0 ? "MEM" : "";
 }
 
+function formatExpression(expression) {
+    return expression
+        .replace(/Math\.sqrt\(/g, "√(")
+        .replace(/\*\*/g, "^");
+}
+
 function updateDisplay() {
     if (previousValue !== "" && operation !== "") {
         miniDisplay.textContent = previousValue + " " + operation;
-        display.textContent = currentValue || "0";
+        display.textContent = formatExpression(currentValue || "0");
     } else {
         miniDisplay.textContent = "";
         display.textContent = currentValue || "0";
@@ -93,8 +99,26 @@ function appendParenthesis(parenthesis) {
     updateDisplay();
 }
 
+function appendPower() {
+    playClickSound();
+
+    if (shouldResetDisplay) {
+        currentValue = "";
+        shouldResetDisplay = false;
+    }
+
+    currentValue += "**";
+
+    updateDisplay();
+}
+
 function isExpressionMode() {
-    return currentValue.includes("(") || currentValue.includes(")");
+    return (
+        currentValue.includes("(") ||
+        currentValue.includes(")") ||
+        currentValue.includes("**") ||
+        currentValue.includes("Math.")
+    );
 }
 
 function chooseOperation(op) {
@@ -160,11 +184,11 @@ function calculate() {
                 return;
             }
 
-            ajouterHistorique(currentValue + " = " + result);
+            ajouterHistorique(formatExpression(currentValue) + " = " + result);
 
             playEqualSound();
 
-            miniDisplay.textContent = currentValue;
+            miniDisplay.textContent = formatExpression(currentValue);
             display.textContent = result;
 
             currentValue = String(result);
@@ -288,14 +312,15 @@ function toggleTheme() {
 }
 
 function racineCarree() {
-    if (currentValue === "") {
-        return;
-    }
-
     playClickSound();
 
-    currentValue = String(Math.sqrt(Number(currentValue)));
-    shouldResetDisplay = true;
+    if (shouldResetDisplay) {
+        currentValue = "";
+        shouldResetDisplay = false;
+    }
+
+    currentValue += "Math.sqrt(";
+
     updateDisplay();
 }
 
