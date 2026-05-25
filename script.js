@@ -59,11 +59,11 @@ function formatExpression(expression) {
 
 function updateDisplay() {
     if (previousValue !== "" && operation !== "") {
-        miniDisplay.textContent = previousValue + " " + operation;
+        miniDisplay.textContent = formatExpression(previousValue + " " + operation);
         display.textContent = formatExpression(currentValue || "0");
     } else {
         miniDisplay.textContent = "";
-        display.textContent = currentValue || "0";
+        display.textContent = formatExpression(currentValue || "0");
     }
 
     operationActive.textContent = angleMode;
@@ -155,6 +155,19 @@ function pourcentage() {
 
     currentValue += "%";
     updateDisplay();
+}
+
+function formatExpression(expression) {
+    return expression
+        .replace(/Math\.sqrt\(/g, "√(")
+        .replace(/Math\.log10\(/g, "log(")
+        .replace(/Math\.sin\(/g, "sin(")
+        .replace(/Math\.cos\(/g, "cos(")
+        .replace(/Math\.tan\(/g, "tan(")
+        .replace(/Math\.PI/g, "π")
+        .replace(/\*\*/g, "^")
+        .replace(/\*/g, "×")
+        .replace(/\//g, "÷");
 }
 
 function calculateExpression(expression) {
@@ -565,3 +578,4 @@ if ("serviceWorker" in navigator) {
             });
     });
 }
+
